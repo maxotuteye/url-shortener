@@ -2,7 +2,9 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const urlShortener = require('node-url-shortener')
 const db = require('./models/index')
+const Handlebars = require('handlebars')
 const exphbs = require('express-handlebars')
+const {allowInsecurePrototypeAccess} = require('@handlebars/allow-prototype-access')
 
 const port = process.env.PORT || 3000
 const path = require('path')
@@ -11,7 +13,10 @@ const app = express()
 app.use(bodyParser.urlencoded({extended: true}))
 app.use(express.urlencoded())
 
-app.engine('handlebars', exphbs.engine())
+app.engine('handlebars', exphbs.engine({
+    defaultLayout: 'main',
+    handlebars: allowInsecurePrototypeAccess(Handlebars)
+}))
 app.set('view engine', 'handlebars')
 
 app.get('/', function (req, res) {
