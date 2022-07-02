@@ -11,11 +11,16 @@ const app = express()
 app.use(bodyParser.urlencoded({extended: true}))
 app.use(express.urlencoded())
 
-app.engine('handlebars', exphbs())
+app.engine('handlebars', exphbs.engine())
 app.set('view engine', 'handlebars')
 
 app.get('/', function (req, res) {
-    res.sendFile(path.join(__dirname, '/index.html'))
+    db.Url.findAll({order: [['createdAt', 'DESC']], limit: 10})
+        .then(urlObjs => {
+            res.render('index', {
+                urlObjs: urlObjs
+            })
+        })
 })
 
 app.post('/url', function (req, res) {
@@ -23,7 +28,7 @@ app.post('/url', function (req, res) {
 
     urlShortener.short(url, function (err, shortUrl) {
         db.Url.findOrCreate({where: {url: url, shortUrl: shortUrl}})
-            .then(([urlObj, created]) => {
+            .then(() => {
                 res.send(shortUrl)
             })
     })
