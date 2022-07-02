@@ -19,9 +19,11 @@
         "database": "urlshortener_development",
         "host": "127.0.0.1",
         "dialect": "postgres",
-        "ssl": {
-            "require": true,
-            "rejectUnauthorized": false
+        "dialectOptions": {
+            "ssl": {
+                "require": true,
+                "rejectUnauthorized": false
+            }
         },
         "use_env_variable": "DATABASE_URL"
     }
